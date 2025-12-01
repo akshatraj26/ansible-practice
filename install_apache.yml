@@ -11,20 +11,14 @@
     when: ansible_distribution in ["Debian",  "Ubuntu"]
       
 
-  - name: install apache2 package
+  - name: install apache2 and php packages
     apt:
-       name: apache2
-       state: latest
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
     when: ansible_distribution == "Ubuntu"
     
-
-  - name: add php support for apache
-    apt:
-       name: libapache2-mod-php
-       state: latest
-
-    when: ansible_distribution == "Ubuntu"
-
 
   - name: Install nginx on your company's computer
     apt: 
