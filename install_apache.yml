@@ -7,9 +7,14 @@
 
   - name: update repository index
     apt:
-       update_cache: yes
+      update_cache: yes
     when: ansible_distribution in ["Debian",  "Ubuntu"]
-      
+
+  - name: update repository for amazon linux
+    yum:
+      update_cache: yes
+    when: ansible_distribution == "Amazon"
+
 
   - name: install apache2 and php packages
     apt:
@@ -20,7 +25,9 @@
     when: ansible_distribution == "Ubuntu"
     
 
-  - name: Install nginx on your company's computer
+  - name: Install nginx on your company's computer on Amazon
     apt: 
       name: nginx
       state: latest
+    when:
+      - ansible_distribution == "Ubuntu"

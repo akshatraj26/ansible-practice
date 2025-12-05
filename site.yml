@@ -1,0 +1,84 @@
+---
+
+- hosts: all
+  become: true
+  pre_tasks:
+
+  - name: Update repository index (Amazon Linux)
+    tags: always
+    yum:
+      update_only: yes
+      update_cache: yes
+    when: ansible_distribution == "Amazon"
+
+
+  - name: install updates (Ubuntu)
+    tags: always
+    apt:
+      upgrade: dist
+      update_cache: yes
+    when: ansible_distribution == "Ubuntu"
+
+
+
+- hosts: web_servers
+  become: true
+  tasks:
+
+  - name: install apache2 and php packages
+    tags: apache,apache2,ubuntu
+    apt:
+      name:
+        - apache2
+        - libapache2-mod-php
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+    
+
+  - name: Install nginx on your company's computer
+    tags: nginx
+    apt: 
+      name: nginx
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+
+  - name: Install httpd, php and nginx on Amazon EC2
+    tags: apache,amazon,php
+    yum:
+      name:
+        - nginx
+        - httpd
+        - php
+      state: latest
+    when: ansible_distribution == "Amazon"
+
+- hosts: db_servers
+  become: true
+  tasks:
+
+  - name: install mariadb package (Ubuntu)
+    tags: centos,db,mariadb
+    apt:
+      name: mariadb-server
+      state: latest
+    when: ansible_distribution == "Ubuntu"
+
+  - name: install mariadb package (Amazon)
+    tags: db,mariadb,ubuntu
+    yum:
+      name: mariadb
+      state: latest
+    when: ansible_distribution == "Amazon"
+
+- hosts: file_servers
+  become: true
+  tasks:
+
+  - name: install samba package
+    tags: samba
+    package:
+      name: samba
+      state: latest
+
+
