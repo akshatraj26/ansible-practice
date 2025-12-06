@@ -1,11 +1,11 @@
 [web_servers]
-172.31.45.87    
+172.31.42.15 ansible_user=admin 
 
 
 [db_servers]
-172.31.43.56
+172.31.38.169
 
 [file_servers]
-172.31.39.43 ansible_user=ec2-user 
+172.31.34.113 ansible_user=ec2-user 
 
 

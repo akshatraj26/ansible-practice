@@ -17,7 +17,7 @@
     apt:
       upgrade: dist
       update_cache: yes
-    when: ansible_distribution == "Ubuntu"
+    when: ansible_distribution in ["Ubuntu", "Debian"]
 
 
 
@@ -32,15 +32,17 @@
         - apache2
         - libapache2-mod-php
       state: latest
-    when: ansible_distribution == "Ubuntu"
+    when: ansible_distribution in ["Ubuntu", "Debian"]
     
 
-  - name: Install nginx on your company's computer
-    tags: nginx
-    apt: 
-      name: nginx
-      state: latest
-    when: ansible_distribution == "Ubuntu"
+  - name: copy default html file for site
+    tags: apache,apache2,httpd
+    copy: 
+      src: defaults_site.html
+      dest: /var/www/html/index.html
+      owner: root
+      group: root
+      mode: 0644
 
 
   - name: Install httpd, php and nginx on Amazon EC2
@@ -62,7 +64,8 @@
     apt:
       name: mariadb-server
       state: latest
-    when: ansible_distribution == "Ubuntu"
+    when: ansible_distribution in ["Ubuntu", "Debian"]
+
 
   - name: install mariadb package (Amazon)
     tags: db,mariadb,ubuntu
