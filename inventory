@@ -1,6 +1,5 @@
 [web_servers]
-3.16.45.101 ansible_user=admin 
-
+172.31.41.112 ansible_user=admin 
 
 [db_servers]
 172.31.34.180

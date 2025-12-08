@@ -4,20 +4,30 @@
   become: true
   pre_tasks:
 
-  - name: Update repository index (Amazon Linux)
+  - name: update repo cache (Amazon Linux)
     tags: always
     yum:
-      update_only: yes
       update_cache: yes
+    changed_when: false
     when: ansible_distribution == "Amazon"
 
 
-  - name: install updates (Ubuntu)
+  - name: update repo cache (Ubuntu)
     tags: always
     apt:
-      upgrade: dist
       update_cache: yes
+    changed_when: false
     when: ansible_distribution in ["Ubuntu", "Debian"]
+
+
+- hosts: all
+  become: true
+  tasks:
+  - name: add ssh key for simone
+    tags: always
+    authorized_key: 
+      user: simone
+      key: "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrA/PjwdjDsFihdVAiCLyAvjoUMuM7s+RaPW3owpo3u ansible" 
 
 
 - hosts: workstations
