@@ -1,0 +1,33 @@
+---
+
+- hosts: all
+  become: true
+  tasks:
+
+
+
+  - name: install docker Ubuntu & debian
+    apt: 
+      name: docker.io
+      state: present
+    when: ansible_distribution in ["Ubuntu", "Debian"]
+
+
+  - name: install docker amazon 
+    yum:
+      name: docker
+      state: present
+    when: ansible_distribution == "Amazon"
+
+
+  - name: Restart docker Ubuntu& Debian
+    service:
+      name: docker
+      state: restarted
+    when: ansible_distribution in ["Debian", "Ubuntu"] 
+
+  - name: Restart docker on Amazon
+    service:
+      name: docker
+      state: restarted
+    when: ansible_distribution == "Amazon"

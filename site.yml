@@ -20,19 +20,36 @@
     when: ansible_distribution in ["Ubuntu", "Debian"]
 
 
+- hosts: workstations
+  become: true
+  tasks:
+
+    - name: install unzip
+      package:
+        name: unzip
+    
+    - name: install terraform
+      unarchive:
+        src: https://releases.hashicorp.com/terraform/1.14.1/terraform_1.14.1_linux_amd64.zip
+        dest: /usr/local/bin
+        remote_src: yes
+        mode: 0755
+        owner: root
+        group: root
+
 
 - hosts: web_servers
   become: true
   tasks:
 
   - name: install apache2 and php packages
-    tags: apache,apache2,ubuntu
+    tags: apache,apache2,debian
     apt:
       name:
         - apache2
         - libapache2-mod-php
       state: latest
-    when: ansible_distribution in ["Ubuntu", "Debian"]
+    when: ansible_distribution == "Debian"
     
 
   - name: copy default html file for site
@@ -43,6 +60,32 @@
       owner: root
       group: root
       mode: 0644
+
+  - name: start httpd (Debian)
+    tags: apache,debian,httpd
+    service: 
+      name: apache2
+      state: started
+      enabled: yes
+    when: ansible_distribution == "Debian"
+
+  - name: change email address for admin
+    tags: apache,debian,httpd
+    lineinfile: 
+      path: /etc/apache2/sites-available/000-default.conf
+      regexp: '^\s*ServerAdmin'
+      line: ServerAdmin somebody@somewhere.net
+    when: ansible_distribution == "Debian"
+    register: apache2
+
+
+
+  - name: restart apache2 (Debian)
+    tags: apache,debian,httpd
+    service:
+      name: apache2
+      state: restarted
+    when: apache2.changed
 
 
   - name: Install httpd, php and nginx on Amazon EC2
