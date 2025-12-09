@@ -1,0 +1,57 @@
+- name: install apache2 and php packages
+  tags: apache,apache2,debian
+  apt:
+    name:
+      - apache2
+      - libapache2-mod-php
+    state: latest
+  when: ansible_distribution == "Debian"
+
+
+- name: copy default html file for site
+  tags: apache,apache2,httpd
+  copy:
+    src: defaults_site.html
+    dest: /var/www/html/index.html
+    owner: root
+    group: root
+    mode: 0644
+
+- name: start httpd (Debian)
+  tags: apache,debian,httpd
+  service:
+    name: apache2
+    state: started
+    enabled: yes
+  when: ansible_distribution == "Debian"
+
+
+- name: change email address for admin
+  tags: apache,debian,httpd
+  lineinfile:
+    path: /etc/apache2/sites-available/000-default.conf
+    regexp: '^\s*ServerAdmin'
+    line: ServerAdmin somebody@somewhere.net
+  when: ansible_distribution == "Debian"
+  register: apache2
+
+
+
+- name: restart apache2 (Debian)
+  tags: apache,debian,httpd
+  service:
+    name: apache2
+    state: restarted
+  when: apache2.changed
+
+
+- name: Install httpd, php and nginx on Amazon EC2
+  tags: apache,amazon,php
+  yum:
+    name:
+      - nginx
+      - httpd
+      - php
+    state: latest
+  when: ansible_distribution == "Amazon"
+
