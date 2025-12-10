@@ -7,7 +7,7 @@
     state: latest
 
 
-- name: copy html file for site
+- name: copy default html file for site
   tags: apache,apache2,httpd
   copy:
     src: defaults_site.html
@@ -29,12 +29,18 @@
   lineinfile:
     path: /etc/apache2/sites-available/000-default.conf
     regexp: '^\s*ServerAdmin'
-    line: ServerAdmin somebody@somewhere.com
+    line: ServerAdmin somebody@somewhere.net
   when: ansible_distribution == "Debian"
-  notify: restart_apache
+  register: apache
 
 
 
+- name: restart apache2 (Debian)
+  tags: apache,debian,httpd
+  service:
+    name: apache2
+    state: restarted
+  when: apache.changed
 
 
 
