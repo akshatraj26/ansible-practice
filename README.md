@@ -30,6 +30,7 @@ ansible-practice/
 
 ## 🚀 Getting Started
 
+
 ### 0. Generate SSH Key & Share to Remote Nodes
 
 Generate SSH key on control machine (Ansible master):
