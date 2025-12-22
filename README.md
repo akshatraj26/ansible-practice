@@ -2,6 +2,7 @@
 
 This repository contains Ansible playbooks and roles for provisioning, configuring, and managing servers in a structured and reusable way.
 
+
 ## 📁 Project Structure
 
 ```
